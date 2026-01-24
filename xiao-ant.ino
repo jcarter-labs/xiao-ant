@@ -1,20 +1,21 @@
+// xiao-ant.ino - 1.22.26
+
 #include <Bounce2.h>
 
 const uint8_t BUTTON_PIN = D10;
 const uint8_t ANT_PINS[] = {3, 4, 5};
 const uint8_t NUM_ANTENNAS = 3;
-const uint8_t DEBOUNCE_MS = 10;
+const uint8_t DEBOUNCE_MS = 50;
 
 Bounce button = Bounce();
 uint8_t antenna_state = 1;
 
 void setup() {
   Serial.begin(115200);
-  delay(100);
-  Serial.println("XIAO ESP32C3 Antenna Controller 1.20.26  v2");
   
   button.attach(BUTTON_PIN, INPUT_PULLUP);
   button.interval(DEBOUNCE_MS);
+  button.update();
   
   for (uint8_t i = 0; i < NUM_ANTENNAS; i++) {
     pinMode(ANT_PINS[i], OUTPUT);
@@ -40,6 +41,6 @@ void set_antenna(uint8_t ant) {
   
   digitalWrite(ANT_PINS[ant - 1], HIGH);
   
-  Serial.print("Antenna: ");
+  Serial.print("Ant ");
   Serial.println(ant);
 }

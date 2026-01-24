@@ -169,6 +169,14 @@ Build reliable 3-antenna controller replacing crash-prone Raspberry Pi Pico syst
   - Power-on default state repeatable (antenna 1 selected)
 - **Validates:** Complete system operation, state machine robustness
 - **Git Milestone 3:** Integration complete, production-ready code committed
+- **Status:** ✓ COMPLETE (1.22.26)
+
+**Hardware Debug Notes (Milestone 3):**
+- **Issue:** 0.1µF capacitor across D10 (button input) caused false button trigger during boot
+  - **Root Cause:** Capacitor charged through INPUT_PULLUP during initialization, created LOW→HIGH edge that Bounce2 detected as button press
+  - **Solution:** Removed capacitor - Bounce2 library provides software debouncing, hardware capacitor unnecessary
+- **Debounce Tuning:** Increased from 10ms to 50ms for more conservative, reliable operation
+- **Serial Output:** Removed startup Serial.println() to avoid USB CDC buffering confusion (ESP32C3 native USB buffers until monitor connects)
 
 ---
 
@@ -222,9 +230,12 @@ Build reliable 3-antenna controller replacing crash-prone Raspberry Pi Pico syst
 
 ## Next Steps
 
-1. **Confirm Test 0 design** (setup validation sketch)
-2. Execute Test 0: toolchain validation, GPIO blink test
-3. **Confirm Test 1 design** (debounce validation sketch)
-4. Execute Test 1-3 with serial monitor automation
-5. **Integrate with usage:** Verify overnight stability during multi-week operation
-6. **RFI baseline:** K4 receiver measurements vs Pico system
+**Milestone 3 Complete - Production Firmware Validated (1.22.26)**
+
+**Milestone 4: RFI Testing & Operational Validation**
+1. **Real-world operational testing:** Use system normally, file bug reports if issues arise
+2. **RFI baseline measurement:** K4 receiver audit on 80M, 40M, 20M, 15M, 10M bands
+   - Compare XIAO controller vs Pico system RMS RF levels
+   - Method: Band sampling with XIAO powered ON vs OFF
+3. **Overnight stability monitoring:** Track crash rate over multi-week operation (<1 crash/month target)
+4. **Optional enhancements:** WiFi expansion if operational needs arise
